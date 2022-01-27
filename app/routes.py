@@ -6,10 +6,8 @@ from app.models import db
 import requests as r
 
 @app.route('/')
-@app.route('/base')
-
 def index():
-    return "Hello, Pokemon API!"
+    return render_template('index.html')
 
 
 @app.route('/search/pokemon', methods = ['POST'])
@@ -29,30 +27,34 @@ def searchPokemon():
 
             for ability in my_data['abilities']:
                 pokemon['abilities'].append(ability['ability']['name'])
+            
             pokemon['name'] = my_data['name']
             pokemon['image'] = my_data['sprites']['front_default']
-            id = my_data['id']
+            # id = my_data['id']
 
             my_pokemon = Pokemon.query.filter_by(id=id)
-            if not my_pokemon:
-            # instantiate the Pokemon from models
-                my_pokemon = Pokemon(id, pokemon['name'], pokemon['image'], pokemon['ability'])
-                db.session.add(my_pokemon)
-                if len(pokemon['abilities']) == 2:
-                    ability1 = pokemon['abilities'][0], id
-                    ability2 = pokemon['abilities'][1], id
-                    db.session.add(ability1)
-                    db.session.add(ability2)
+            # if not my_pokemon:
+            # # instantiate the Pokemon from models
+            #     my_pokemon = Pokemon(id, pokemon['name'], pokemon['image'], pokemon['ability'])
+            #     db.session.add(my_pokemon)
+            #     if len(pokemon['abilities']) == 2:
+            #         ability1 = pokemon['abilities'][0], id
+            #         ability2 = pokemon['abilities'][1], id
+            #         db.session.add(ability1)
+            #         db.session.add(ability2)
                 
-                elif len(pokemon['abilities']) == 1:
-                    ability1 = pokemon['abilities'][1], id
-                    db.session.add(ability1)
-                db.session.commit()
+            #     elif len(pokemon['abilities']) == 1:
+            #         ability1 = pokemon['abilities'][1], id
+            #         db.session.add(ability1)
+            #     db.session.commit()
                 
 
             # grab information and pass to a template.
+            
+            print(pokemon)
             return render_template('pokemon.html', pokemon = pokemon)
         else:
             pokemon = ''
             return render_template('pokemon.html', pokemon = pokemon)
-    return {'hi': 'there'}
+    
+    return render_template()
